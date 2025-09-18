@@ -5,7 +5,7 @@ import { askAi } from "@/services/aiApi";
 
 const Home = () => {
   const [question, setQuestion] = useState("");
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState<any>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,13 +19,14 @@ const Home = () => {
 
     try {
       const result = await askAi(question);
-      setResponse(typeof result === 'string' ? result : JSON.stringify(result, null, 2));
+      setResponse(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Bir hata oluştu");
     } finally {
       setLoading(false);
     }
   };
+
 
 
   return (
@@ -65,12 +66,19 @@ const Home = () => {
             </div>
           )}
 
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Test Result:</h3>
-              <pre className="bg-gray-100 p-3 rounded-md overflow-auto text-sm">
-                {response.result}
+          {response && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Cevap:</h3>
+              <pre className="bg-gray-100 p-3 rounded-md overflow-auto text-sm whitespace-pre-wrap break-words max-w-full">
+                {typeof response === 'string' 
+                  ? response 
+                  : JSON.stringify(response, null, 2).replace(/\\u[\dA-F]{4}/gi, (match) => 
+                      String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
+                    )
+                }
               </pre>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
