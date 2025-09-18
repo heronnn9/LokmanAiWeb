@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { askAi } from "@/services/aiApi";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input/TextInput/TextInput";
 
 const Home = () => {
   const [question, setQuestion] = useState("");
@@ -40,21 +38,24 @@ const Home = () => {
               <label htmlFor="question" className="block text-sm font-medium text-gray-700 mb-2">
                 Sorunuz:
               </label>
-              <Input
+              <textarea
                 id="question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Örnek: Lokman Firmalar"
+                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={3}
+                disabled={loading}
               />
             </div>
             
-            <Button
+            <button
               type="submit"
               disabled={loading || !question.trim()}
-              fullWidth
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {loading ? "Gönderiliyor..." : "Gönder"}
-            </Button>
+            </button>
           </form>
 
           {error && (
