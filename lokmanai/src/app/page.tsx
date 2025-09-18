@@ -19,13 +19,14 @@ const Home = () => {
 
     try {
       const result = await askAi(question);
-      setResponse(JSON.stringify(result, null, 2));
+      setResponse(typeof result === 'string' ? result : JSON.stringify(result, null, 2));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Bir hata oluştu");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-neutral-100 p-4">
@@ -64,14 +65,12 @@ const Home = () => {
             </div>
           )}
 
-          {response && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Cevap:</h3>
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">Test Result:</h3>
               <pre className="bg-gray-100 p-3 rounded-md overflow-auto text-sm">
-                {response}
+                {response.result}
               </pre>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
