@@ -72,7 +72,7 @@ const Home = () => {
               <pre className="bg-gray-100 p-3 rounded-md overflow-auto text-sm whitespace-pre-wrap break-words max-w-full">
                 {typeof response === 'string' 
                   ? response 
-                  : JSON.stringify(response, null, 2).replace(/\\u[\dA-F]{4}/gi, (match) => 
+                  : response.result || JSON.stringify(response, null, 2).replace(/\\u[\dA-F]{4}/gi, (match) => 
                       String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
                     )
                 }
