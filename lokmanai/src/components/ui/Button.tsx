@@ -13,7 +13,6 @@ import {
     BUTTON_ICON_PADDING,
     BUTTON_PADDING,
 } from '@/constants/theme.constants';
-import Spinner from './Loading/Spinner/Spinner';
 
 const Button = ({
     variant = 'secondary',
@@ -106,10 +105,7 @@ const Button = ({
                 />
             )}
             {isLoading && (
-                <Spinner
-                    size="sm"
-                    color="white"
-                />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             )}
             {props.children}
         </button>
