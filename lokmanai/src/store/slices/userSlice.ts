@@ -27,7 +27,6 @@ const userSlice = createSlice({
             const { id, accessToken, refreshToken, username, mail } =
                 action.payload;
 
-            // Decode JWT token to get additional user info
             state.isAuthenticated = true;
             state.id = id;
             state.username = username;

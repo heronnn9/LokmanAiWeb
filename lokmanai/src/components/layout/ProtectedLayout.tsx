@@ -59,13 +59,13 @@ const ProtectedLayout = ({
             )}
 
             {/* Sidebar */}
-            {showSidebar && (
+           {/*  {showSidebar && (
                 <Sidebar
                     ref={sidebarRef}
                     isCollapsed={isSidebarCollapsed}
                     onToggle={handleSidebarToggle}
                 />
-            )}
+            )} */}
 
             {/* Navbar */}
             {showNavbar && <Navbar />}

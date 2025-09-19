@@ -18,9 +18,8 @@ const customFetch: typeof fetch = (input, init) => {
 
 const baseQuery = fetchBaseQuery({
     baseUrl: isDevBuild
-        ? 'http://syncproapi.ledbim.com/api/v1'
-        : process.env.NEXT_PUBLIC_API_URL +
-          (process.env.NEXT_PUBLIC_API_VERSION || '/v1'),
+        ? 'http://192.168.10.17:7102/'
+        : process.env.NEXT_PUBLIC_API_URL || 'http://192.168.10.17:7102/',
     prepareHeaders: (headers: Headers, { getState }) => {
         // Get token using the utility function
         const accessToken = (getState() as RootState).user.accessToken;

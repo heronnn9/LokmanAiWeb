@@ -12,7 +12,7 @@ export const authApi = baseApi.injectEndpoints({
                 url: 'User/Login',
                 method: 'POST',
                 body: {
-                    mail: credentials.mail,
+                    userName: credentials.userName,
                     password: credentials.password,
                 },
             }),
@@ -22,21 +22,21 @@ export const authApi = baseApi.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    // Set auth cookies (refreshToken yok, sadece accessToken)
-                    setAuthCookies(data.accessToken, '');
+                    // Set auth cookies with both access and refresh tokens
+                    setAuthCookies(data.AccessToken, data.RefreshToken);
                     // Store auth state in Redux
                     dispatch(
                         setCredentials({
-                            id: data.userId,
-                            mail: data.mail,
-                            username: data.fullName,
-                            accessToken: data.accessToken,
-                            refreshToken: '', // API'da refreshToken yok
+                            id: data.User.Id.toString(),
+                            mail: data.User.UserName, // UserName is the email/username
+                            username: data.User.Name, // Name is the display name
+                            accessToken: data.AccessToken,
+                            refreshToken: data.RefreshToken,
                         })
                     );
                     // Store tokens in sessionStorage as backup
-                    sessionStorage.setItem('auth_token', data.accessToken);
-                    sessionStorage.removeItem('refresh_token'); // Artık yok
+                    sessionStorage.setItem('auth_token', data.AccessToken);
+                    sessionStorage.setItem('refresh_token', data.RefreshToken);
                 } catch {
                     // Handle error if needed
                     clearAuthCookies();
