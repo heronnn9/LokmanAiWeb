@@ -86,7 +86,7 @@ const SignInForm = () => {
                     // Handle RTK Query API errors
                     const apiError = error as RTKQueryError;
                     const errorMessage =
-                        apiError?.data?.message ||
+                        apiError?.data?.Message ||
                         'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.';
                     setFormError(errorMessage);
                 }
@@ -104,7 +104,7 @@ const SignInForm = () => {
 
             <div
                 className={classNames(
-                    'dark:!bg-primary-50 border border-neutral-200 bg-white px-8 py-12',
+                    'dark:!bg-primary-500 border border-neutral-200 bg-white px-8 py-12',
                     BORDER_RADIUS_BASE,
                     SHADOW_BASE
                 )}

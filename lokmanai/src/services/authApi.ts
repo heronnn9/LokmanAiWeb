@@ -17,7 +17,7 @@ export const authApi = baseApi.injectEndpoints({
                 },
             }),
             transformResponse: (response: ApiBaseResponse<SignInData>) => {
-                return response.data;
+                return response.Data;
             },
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {

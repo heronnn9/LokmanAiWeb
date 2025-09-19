@@ -51,7 +51,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
         // Handle 401 Unauthorized error
         if (
             result.error.status === 401 ||
-            (result.error.data as ApiBaseResponse<unknown>)?.message ===
+            (result.error.data as ApiBaseResponse<unknown>)?.Message ===
                 'UnauthorizedException'
         ) {
             // Clear auth state
@@ -72,11 +72,11 @@ const baseQueryWithErrorHandling: BaseQueryFn<
     }
 
     // If we got a response but it indicates failure
-    if (result.data && !(result.data as ApiBaseResponse<unknown>).isSuccess) {
+    if (result.data && !(result.data as ApiBaseResponse<unknown>).Success) {
         const apiResponse = result.data as ApiBaseResponse<unknown>;
         // Check for UnauthorizedException in the response message
         if (
-            apiResponse.message === 'UnauthorizedException' ||
+            apiResponse.Message === 'UnauthorizedException' ||
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (result.error as any)?.status === 401
         ) {
@@ -98,10 +98,11 @@ const baseQueryWithErrorHandling: BaseQueryFn<
             error: {
                 status: 400,
                 data: {
-                    isSuccess: false,
-                    errors: apiResponse.errors,
-                    message: apiResponse.message,
-                    data: null,
+                    Success: false,
+                    Message: apiResponse.Message || '',
+                    Data: null,
+                    AuditJson: apiResponse.AuditJson,
+                    CreateAudit: apiResponse.CreateAudit,
                 },
             } as FetchBaseQueryError,
         };

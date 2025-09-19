@@ -12,9 +12,9 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* Left Side - Decorative */}
                 <div className="bg-primary-50 hidden items-center justify-center p-12 lg:flex lg:w-1/2">
                     <div className="max-w-md text-center">
-                        <div className="flex items-center justify-center">
-                            <Image src="/public/img/logo.png" alt="LokmanAI" width={100} height={100} />
-                            <h1 className="text-primary-700 text-login-heading">
+                        <div className="">
+                            <h1 className="text-primary-700 text-login-heading flex items-center gap-1">
+                                <Image src="/icons/lokman.svg" alt="LokmanAI" width={64} height={64} />
                                 Lokman
                                 <b className="text-secondary-500 text-login-heading">
                                     AI

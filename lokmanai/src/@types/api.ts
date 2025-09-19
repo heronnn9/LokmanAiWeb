@@ -1,8 +1,9 @@
 export type ApiBaseResponse<T> = {
-    data: T;
-    message: string;
-    isSuccess: boolean;
-    errors?: string[] | null;
+    Data: T;
+    Message: string | null;
+    Success: boolean;
+    AuditJson?: unknown;
+    CreateAudit?: unknown;
 };
 
 export type ApiPagedResponse<T> = {
@@ -14,10 +15,11 @@ export type ApiPagedResponse<T> = {
 };
 
 export type ApiError = {
-    isSuccess: boolean;
-    errors?: string[] | null;
-    message: string;
-    data: null;
+    Success: boolean;
+    Message: string;
+    Data: null;
+    AuditJson?: unknown;
+    CreateAudit?: unknown;
 };
 
 export type RTKQueryError = {

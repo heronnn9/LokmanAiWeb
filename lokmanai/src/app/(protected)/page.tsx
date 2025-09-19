@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { askAi } from "@/services/aiApi";
+import ThemeSwitch from "@/components/ui/ThemeSwitch";
 
 const Home = () => {
   const [question, setQuestion] = useState("");

@@ -36,7 +36,7 @@ export const useAuth = ({
                 !isAuthSuccessPage &&
                 !isAuthed
             ) {
-                router.replace('/sign-in');
+                router.replace('/giris-yap');
             }
         }
     }, [isAuthenticated, router, isAuthPage, isSharedPage, isAuthSuccessPage]);

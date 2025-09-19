@@ -1,10 +1,10 @@
 import Navbar from '@/components/ui/Navbar/Navbar';
-import Sidebar from '@/components/ui/Navbar/Sidebar';
 import { SAFE_ZONE_WIDTH } from '@/constants/theme.constants';
 import { useScreenSize } from '@/hooks/useScreenSize';
+import { useAppSelector } from '@/store/hooks';
 import classNames from 'classnames';
 import { ReactNode, useRef, useState } from 'react';
-import MobileNav from '../ui/Navbar/MobileNav';
+import ThemeSwitch from '../ui/ThemeSwitch';
 
 interface ProtectedLayoutProps {
     children: ReactNode;
@@ -19,13 +19,14 @@ const ProtectedLayout = ({
     showSidebar = true, // Varsayılan olarak sidebar göster
     showNavbar = false,
 }: ProtectedLayoutProps) => {
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    /* const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true); */
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const sidebarRef = useRef<{ toggleMobile: () => void }>(null);
 
     const isMobile = useScreenSize();
+    const { isAuthenticated } = useAppSelector((state) => state.user);
 
-    const handleSidebarToggle = () => {
+ /*    const handleSidebarToggle = () => {
         if (isMobile) {
             setIsMobileMenuOpen(!isMobileMenuOpen);
             // Sidebar component'ine mobile toggle sinyali gönder
@@ -33,18 +34,21 @@ const ProtectedLayout = ({
         } else {
             setIsSidebarCollapsed(!isSidebarCollapsed);
         }
-    };
+    }; */
 
     // Auth sayfalarında sidebar/navbar gösterme
     if (!showSidebar && !showNavbar) {
         return (
-            <div className="w-full">
+            <div className="w-full relative">
+                
                 <div
                     className={classNames(
-                        'mx-auto',
+                        'mx-auto relative',
                         isSafeZone ? `max-w-[${SAFE_ZONE_WIDTH}]` : ''
                     )}
                 >
+                    {/* ThemeSwitch sadece authenticated kullanıcılar için göster */}
+                    
                     {children}
                 </div>
             </div>
@@ -54,9 +58,9 @@ const ProtectedLayout = ({
     return (
         <div className="min-h-screen w-full">
             {/* Mobile Header with Hamburger */}
-            {showSidebar && isMobile && (
+            {/* {showSidebar && isMobile && (
                 <MobileNav handleSidebarToggle={handleSidebarToggle} />
-            )}
+            )} */}
 
             {/* Sidebar */}
            {/*  {showSidebar && (
@@ -71,7 +75,7 @@ const ProtectedLayout = ({
             {showNavbar && <Navbar />}
 
             {/* Main Content */}
-            <div
+            {/* <div
                 className={classNames(
                     'transition-all duration-300 ease-in-out',
                     // Mobile için top padding (header için)
@@ -84,13 +88,19 @@ const ProtectedLayout = ({
                         : 'ml-0',
                     showNavbar ? 'pt-16' : 'pt-0' // Navbar yüksekliği için padding
                 )}
-            >
+            > */}
+            <div>
                 <div
                     className={classNames(
-                        'mx-auto p-6',
+                        'mx-auto ',
                         isSafeZone ? `max-w-[${SAFE_ZONE_WIDTH}]` : ''
                     )}
                 >
+                    {isAuthenticated && (
+                        <div className='absolute top-2 right-2'>
+                            <ThemeSwitch />
+                        </div>
+                    )}
                     {children}
                 </div>
             </div>
