@@ -1,11 +1,11 @@
 export const MENU_ITEMS = [
     {
         id: 'dashboard',
-        label: 'Dashboard',
+        label: 'LokmanAI Chat',
         href: '/',
-        icon: 'orders',
+        icon: 'edit',
     },
-    {
+    /* {
         id: 'users',
         label: 'Kullanıcılar',
         href: '/users',
@@ -28,11 +28,11 @@ export const MENU_ITEMS = [
         label: 'Raporlar',
         href: '/reports',
         icon: 'reports',
-    },
-    {
+    }, */
+   /*  {
         id: 'settings',
         label: 'Ayarlar',
         href: '/settings',
         icon: 'settings',
-    },
+    }, */
 ];

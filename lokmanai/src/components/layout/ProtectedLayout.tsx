@@ -5,6 +5,7 @@ import { useAppSelector } from '@/store/hooks';
 import classNames from 'classnames';
 import { ReactNode, useRef, useState } from 'react';
 import ThemeSwitch from '../ui/ThemeSwitch';
+import Sidebar from '../ui/Navbar/Sidebar';
 
 interface ProtectedLayoutProps {
     children: ReactNode;
@@ -19,14 +20,14 @@ const ProtectedLayout = ({
     showSidebar = true, // Varsayılan olarak sidebar göster
     showNavbar = false,
 }: ProtectedLayoutProps) => {
-    /* const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true); */
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const sidebarRef = useRef<{ toggleMobile: () => void }>(null);
 
     const isMobile = useScreenSize();
     const { isAuthenticated } = useAppSelector((state) => state.user);
 
- /*    const handleSidebarToggle = () => {
+    const handleSidebarToggle = () => {
         if (isMobile) {
             setIsMobileMenuOpen(!isMobileMenuOpen);
             // Sidebar component'ine mobile toggle sinyali gönder
@@ -34,13 +35,13 @@ const ProtectedLayout = ({
         } else {
             setIsSidebarCollapsed(!isSidebarCollapsed);
         }
-    }; */
+    };
 
     // Auth sayfalarında sidebar/navbar gösterme
     if (!showSidebar && !showNavbar) {
         return (
             <div className="w-full relative">
-                
+
                 <div
                     className={classNames(
                         'mx-auto relative',
@@ -48,7 +49,7 @@ const ProtectedLayout = ({
                     )}
                 >
                     {/* ThemeSwitch sadece authenticated kullanıcılar için göster */}
-                    
+
                     {children}
                 </div>
             </div>
@@ -63,19 +64,19 @@ const ProtectedLayout = ({
             )} */}
 
             {/* Sidebar */}
-           {/*  {showSidebar && (
+            {showSidebar && (
                 <Sidebar
                     ref={sidebarRef}
                     isCollapsed={isSidebarCollapsed}
                     onToggle={handleSidebarToggle}
                 />
-            )} */}
+            )}
 
             {/* Navbar */}
             {showNavbar && <Navbar />}
 
             {/* Main Content */}
-            {/* <div
+            <div
                 className={classNames(
                     'transition-all duration-300 ease-in-out',
                     // Mobile için top padding (header için)
@@ -88,8 +89,7 @@ const ProtectedLayout = ({
                         : 'ml-0',
                     showNavbar ? 'pt-16' : 'pt-0' // Navbar yüksekliği için padding
                 )}
-            > */}
-            <div>
+            >
                 <div
                     className={classNames(
                         'mx-auto ',
@@ -97,7 +97,7 @@ const ProtectedLayout = ({
                     )}
                 >
                     {isAuthenticated && (
-                        <div className='absolute top-2 right-2'>
+                        <div className='absolute top-2 right-2 hidden md:block'>
                             <ThemeSwitch />
                         </div>
                     )}

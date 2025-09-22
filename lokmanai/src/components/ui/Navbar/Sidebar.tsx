@@ -1,11 +1,12 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { MENU_ITEMS } from './constants/menu.items';
 import { MenuItem, SidebarProps, SidebarRef } from '@/@interfaces/theme';
-import Icon from '../Icon';
 import { useScreenSize } from '@/hooks/useScreenSize';
+import { useAppSelector } from '@/store/hooks';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import Icon from '../Icon';
+import { MENU_ITEMS } from './constants/menu.items';
 
 const menuItems: MenuItem[] = [...MENU_ITEMS];
 
@@ -13,6 +14,7 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
     ({ isCollapsed = false, onToggle }, ref) => {
         const pathname = usePathname();
         const [isMobileOpen, setIsMobileOpen] = useState(false);
+        const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
         const isMobile = useScreenSize();
 
@@ -44,6 +46,8 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
             }
         };
 
+        const user = useAppSelector((state) => state.user);
+
         return (
             <>
                 {/* Mobile Overlay */}
@@ -56,24 +60,25 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
 
                 {/* Sidebar */}
                 <div
-                    className={`fixed top-0 left-0 z-50 h-screen border-r border-neutral-200 bg-white transition-all duration-300 ease-in-out dark:border-neutral-700 ${
-                        isMobile
-                            ? isMobileOpen
-                                ? 'translate-x-0'
-                                : '-translate-x-full'
-                            : isCollapsed
-                              ? 'w-16'
-                              : 'w-64'
-                    } ${isMobile ? 'w-64' : ''} `}
+                    className={`fixed top-0 left-0 z-50 h-screen border-r border-neutral-200 bg-white transition-all duration-300 ease-in-out dark:border-secondary-500 ${isMobile
+                        ? isMobileOpen
+                            ? 'translate-x-0'
+                            : '-translate-x-full'
+                        : isCollapsed
+                            ? 'w-16'
+                            : 'w-64'
+                        } ${isMobile ? 'w-64' : ''} `}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-neutral-200 p-4 dark:border-neutral-700">
+                    <div className="flex items-center justify-between border-b border-neutral-200 p-4 dark:border-secondary-500">
                         {!isCollapsed && (
-                            <div className="flex items-center space-x-2">
-                                <span className="text-heading-3 text-primary-500 font-gotham">
-                                    SyncPro
-                                </span>
-                            </div>
+                            <h1 className="text-primary-700 text-heading-1 flex items-center gap-1">
+                                <Image src="/icons/lokman.svg" alt="LokmanAI" width={24} height={24} />
+                                Lokman
+                                <b className="text-secondary-500 text-heading-1">
+                                    AI
+                                </b>
+                            </h1>
                         )}
 
                         <button
@@ -85,8 +90,8 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
                                         ? "Sidebar'ı kapat"
                                         : "Sidebar'ı aç"
                                     : isCollapsed
-                                      ? "Sidebar'ı aç"
-                                      : "Sidebar'ı kapat"
+                                        ? "Sidebar'ı aç"
+                                        : "Sidebar'ı kapat"
                             }
                         >
                             <Icon
@@ -117,11 +122,10 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
                                                     setIsMobileOpen(false);
                                                 }
                                             }}
-                                            className={`group flex items-center space-x-3 rounded-lg p-3 transition-all duration-200 ${
-                                                isActive
-                                                    ? 'bg-primary-50 dark:bg-primary-700 text-primary-500'
-                                                    : 'hover:text-primary-500 hover:bg-primary-50 text-neutral-700 dark:text-neutral-300 dark:hover:bg-[#1e2530]'
-                                            } ${!isMobile && isCollapsed ? 'justify-center' : ''} `}
+                                            className={`group flex items-center space-x-3 rounded-lg p-3 transition-all duration-200 ${isActive
+                                                ? 'bg-primary-50 dark:bg-primary-700 text-primary-500'
+                                                : 'hover:text-primary-500 hover:bg-primary-50 text-neutral-700 dark:text-neutral-300 dark:hover:bg-[#1e2530]'
+                                                } ${!isMobile && isCollapsed ? 'justify-center' : ''} `}
                                         >
                                             <Icon
                                                 icon={item.icon}
@@ -143,7 +147,7 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
                     </nav>
 
                     {/* User Section */}
-                    <div className="absolute right-0 bottom-0 left-0 border-t border-neutral-200 p-4 dark:border-neutral-700">
+                    <div className="absolute right-0 bottom-0 left-0 border-t border-neutral-200 p-4 dark:border-secondary-500">
                         <div
                             className={`hover:bg-primary-50 flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors ${!isMobile && isCollapsed ? 'justify-center' : ''} `}
                         >
@@ -160,14 +164,15 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
                             {(isMobile || !isCollapsed) && (
                                 <div className="min-w-0 flex-1">
                                     <p className="text-button-sm font-gotham truncate text-neutral-900">
-                                        Admin User
+                                        {user.username}
                                     </p>
                                     <p className="text-info-small truncate text-neutral-500">
-                                        admin@syncpro.com
+                                        {user.mail}
                                     </p>
                                 </div>
                             )}
                         </div>
+
                     </div>
                 </div>
             </>

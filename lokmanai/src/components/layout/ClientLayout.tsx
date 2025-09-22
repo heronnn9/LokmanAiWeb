@@ -27,7 +27,7 @@ export default function ClientLayout({
 
     return (
         <>
-            <ProtectedLayout 
+            <ProtectedLayout
                 isSafeZone={isLayoutPage}
                 showSidebar={!isAuthPage && !isSharedPage} // Auth ve shared sayfalarda sidebar gösterme
                 showNavbar={false} // Şu an navbar kullanmıyoruz
