@@ -12,13 +12,13 @@ const ThemeSwitch = () => {
     };
 
     return (
-        <button
+        <div
             onClick={toggleTheme}
-            className="bg-primary-100 focus:ring-primary-500 dark:bg-primary-700 relative inline-flex h-12 w-20 items-center rounded-full p-1 transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            className="bg-primary-500  focus:ring-primary-500 cursor-pointer relative inline-flex h-8 w-16 items-center rounded-full p-1 transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none"
             aria-label="Toggle theme"
         >
             <span
-                className={`dark:bg-primary-900 inline-block h-10 w-10 transform rounded-full bg-white shadow-lg transition-transform duration-600 ${
+                className={`dark:bg-primary-900 inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-600 ${
                     theme === 'dark' ? 'translate-x-8' : 'translate-x-0'
                 }`}
             >
@@ -26,19 +26,19 @@ const ThemeSwitch = () => {
                     {theme === 'dark' ? (
                         <Icon
                             icon="star"
-                            size={20}
+                            size={16}
                             color="#fbbf24"
                         />
                     ) : (
                         <Icon
                             icon="star-filled"
-                            size={20}
+                            size={16}
                             color="#f59e0b"
                         />
                     )}
                 </div>
             </span>
-        </button>
+        </div>
     );
 };
 

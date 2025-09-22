@@ -1,3 +1,5 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 interface AiRequest {
   ask: string;
 }
@@ -5,27 +7,28 @@ interface AiRequest {
 interface AiResponse {
   // Add response interface based on what the API returns
   response?: string;
-  data?: any;
+  data?: unknown;
 }
 
-export const askAi = async (question: string): Promise<AiResponse> => {
-  try {
-    const response = await fetch('http://192.168.1.143:5001/ask', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ask: question }),
-    });
+// Create a separate API instance for AI service
+export const askApi = createApi({
+  reducerPath: 'aiApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://192.168.1.143:5001/',
+  }),
+  endpoints: (builder) => ({
+    // AI Endpoint
+    ask: builder.mutation<AiResponse, AiRequest>({
+        query: (request) => ({
+            url: 'ask',
+            method: 'POST',
+            body: request,
+        }),
+        transformResponse: (response: AiResponse) => {
+            return response;
+        },
+    }),
+  }),
+});
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('AI API Error:', error);
-    throw error;
-  }
-};
+export const { useAskMutation } = askApi;

@@ -1,0 +1,19 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
+    // Kaydederken import düzenlemeyi kapat (string değil boolean!)
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never"
+    },
+  
+    // Prettier proje config’ini kullanır; gerekliyse aç:
+    "prettier.requireConfig": true,
+  
+    // İsteğe bağlı (senin user ayarlarınla uyumlu):
+    "prettier.printWidth": 100,
+    "prettier.semi": false,
+    "prettier.useTabs": false,
+    "prettier.tabWidth": 3
+  }
+  

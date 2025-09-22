@@ -1,6 +1,6 @@
 // Textarea component
 import { TextAreaProps } from '@/@interfaces/input';
-import { BORDER_RADIUS_SM } from '@/constants/theme.constant';
+import { BORDER_RADIUS_SM } from '@/constants/theme.constants';
 import classNames from 'classnames';
 import InputErrorMessage from '../shared/InputErrorMessage';
 import InputLabel from '../shared/InputLabel';
