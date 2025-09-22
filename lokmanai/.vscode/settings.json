@@ -14,6 +14,9 @@
     "prettier.printWidth": 100,
     "prettier.semi": false,
     "prettier.useTabs": false,
-    "prettier.tabWidth": 3
+    "prettier.tabWidth": 3,
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
+    }
   }
   

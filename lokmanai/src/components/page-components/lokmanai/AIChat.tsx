@@ -6,6 +6,7 @@ import { addMessage, setLoading, setError, clearError, clearMessages, Message } 
 import React, { useState, useRef, useEffect } from "react";
 import AIForm from "./AIForm";
 import AILoading from "./AILoading";
+import Image from "next/image";
 
 const AIChat = () => {
   const [question, setQuestion] = useState("");
@@ -44,16 +45,16 @@ const AIChat = () => {
 
     try {
       const result = await ask({ ask: currentQuestion });
-      
+
       // AI cevabını ekle
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: typeof result === 'string' 
-          ? result 
-          : String((result as any)?.response || (result as any)?.data || JSON.stringify(result, null, 2)).replace(/\\u[\dA-F]{4}/gi, (match) => 
-              String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
-            ),
+        content: typeof result === 'string'
+          ? result
+          : String((result as any)?.response || (result as any)?.data || JSON.stringify(result, null, 2)).replace(/\\u[\dA-F]{4}/gi, (match) =>
+            String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
+          ),
         timestamp: new Date()
       };
 
@@ -61,7 +62,7 @@ const AIChat = () => {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Bir hata oluştu";
       dispatch(setError(errorMsg));
-      
+
       // Hata durumunda AI mesajı ekle
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -85,7 +86,13 @@ const AIChat = () => {
           {/* Header */}
           <div className="bg-white border border-neutral-200 rounded-t-lg p-4 border-b">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">LokmanAI Sohbet</h1>
+              <h1 className="text-primary-700 text-heading-1 flex items-center gap-1">
+                <Image src="/icons/lokman.svg" alt="LokmanAI" width={24} height={24} />
+                Lokman
+                <b className="text-secondary-500 text-heading-1">
+                  AI
+                </b>
+              </h1>
               {messages.length > 0 && (
                 <button
                   onClick={() => dispatch(clearMessages())}
@@ -111,21 +118,19 @@ const AIChat = () => {
                     className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                        message.type === 'user'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 text-gray-800 border border-gray-200'
-                      }`}
+                      className={`max-w-[80%] rounded-lg px-4 py-2 ${message.type === 'user'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-800 border border-gray-200'
+                        }`}
                     >
                       <div className="whitespace-pre-wrap break-words">
                         {message.content}
                       </div>
-                      <div className={`text-xs mt-1 ${
-                        message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
-                      }`}>
-                        {message.timestamp.toLocaleTimeString('tr-TR', { 
-                          hour: '2-digit', 
-                          minute: '2-digit' 
+                      <div className={`text-xs mt-1 ${message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                        {message.timestamp.toLocaleTimeString('tr-TR', {
+                          hour: '2-digit',
+                          minute: '2-digit'
                         })}
                       </div>
                     </div>
@@ -147,7 +152,7 @@ const AIChat = () => {
             <div className="bg-white border-l border-r border-neutral-200 px-4 py-2">
               <div className="p-3 bg-red-100 border border-red-300 rounded-md">
                 <p className="text-red-700 text-sm">Hata: {error}</p>
-                <button 
+                <button
                   onClick={() => dispatch(clearError())}
                   className="text-red-600 hover:text-red-800 text-xs mt-1 underline"
                 >
@@ -159,11 +164,11 @@ const AIChat = () => {
 
           {/* Form Container */}
           <div className="bg-white border border-neutral-200 rounded-b-lg p-4">
-            <AIForm 
-              handleSubmit={handleSubmit} 
-              question={question} 
-              setQuestion={setQuestion} 
-              loading={loading} 
+            <AIForm
+              handleSubmit={handleSubmit}
+              question={question}
+              setQuestion={setQuestion}
+              loading={loading}
             />
           </div>
         </div>
