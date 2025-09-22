@@ -4,7 +4,7 @@ import React from "react";
 
 const AIForm = ({ handleSubmit, question, setQuestion, loading }: { handleSubmit: (e: React.FormEvent) => void, question: string, setQuestion: (question: string) => void, loading: boolean }) => {
   return (
-    <form onSubmit={handleSubmit} className="flex gap-3 items-end">
+    <form onSubmit={handleSubmit} className="flex gap-3 items-end  ">
       <div className="flex-1">
         <TextArea
           id="question"
@@ -20,7 +20,7 @@ const AIForm = ({ handleSubmit, question, setQuestion, loading }: { handleSubmit
           }}
         />
       </div>
-      
+
       <Button
         type="submit"
         isLoading={loading}

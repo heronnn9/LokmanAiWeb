@@ -80,11 +80,11 @@ const AIChat = () => {
 
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-100">
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-4xl h-full flex flex-col">
+    <div className="flex flex-col h-screen bg-neutral-100 ">
+      <div className="flex-1 flex items-center justify-center p-4 ">
+        <div className="w-full max-w-4xl h-full flex flex-col ">
           {/* Header */}
-          <div className="bg-white border border-neutral-200 rounded-t-lg p-4 border-b">
+          <div className="bg-white border border-neutral-200 rounded-t-lg p-4 border-b dark:border-secondary-500">
             <div className="flex items-center justify-between">
               <h1 className="text-primary-700 text-heading-1 flex items-center gap-1">
                 <Image src="/icons/lokman.svg" alt="LokmanAI" width={24} height={24} />
@@ -105,7 +105,7 @@ const AIChat = () => {
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto">
+          <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-secondary-500">
             <div className="p-4 space-y-4">
               {messages.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
@@ -149,7 +149,7 @@ const AIChat = () => {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-white border-l border-r border-neutral-200 px-4 py-2">
+            <div className="bg-white border-l border-r border-neutral-200 px-4 py-2 dark:border-secondary-500">
               <div className="p-3 bg-red-100 border border-red-300 rounded-md">
                 <p className="text-red-700 text-sm">Hata: {error}</p>
                 <button
@@ -163,7 +163,7 @@ const AIChat = () => {
           )}
 
           {/* Form Container */}
-          <div className="bg-white border border-neutral-200 rounded-b-lg p-4">
+          <div className="bg-white border border-neutral-200 rounded-b-lg p-4 dark:border-secondary-500">
             <AIForm
               handleSubmit={handleSubmit}
               question={question}
