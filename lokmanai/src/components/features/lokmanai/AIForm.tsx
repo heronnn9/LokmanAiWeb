@@ -12,7 +12,7 @@ const AIForm = ({ handleSubmit, question, setQuestion, loading, messages }: { ha
           id="question"
           placeholder="Mesajınızı yazın..."
           value={question}
-          className={classNames("h-20 resize-none", messages?.length === 0 && "!rounded-full !h-12 ")}
+          className={classNames("h-20 resize-none", messages?.length === 0 && "!rounded-full !h-12 !py-3 ")}
           onChange={(e) => setQuestion(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {

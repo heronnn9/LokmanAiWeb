@@ -1,0 +1,224 @@
+/* Dark mode styles - Modern colors based on #ff6f00 and #002147 */
+.dark {
+    color-scheme: dark;
+}
+
+/* Body and base elements */
+.dark body {
+    background-color: #0a0f1a;
+    color: #e8eaed;
+}
+
+/* Text elements - automatic colors */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+    color: #ffffff;
+}
+
+.dark p,
+.dark span,
+.dark div {
+    color: #e8eaed;
+}
+
+.dark label {
+    color: #c9cdd4;
+}
+
+/* Background colors */
+.dark .bg-white {
+    background-color: #1a1f2e;
+}
+
+.dark .bg-neutral-0 {
+    background-color: #141924;
+}
+
+.dark .bg-neutral-100 {
+    background-color: #2a3441;
+}
+
+.dark .bg-neutral-200 {
+    background-color: #1e2530;
+}
+
+/* Primary colors adapted for dark mode */
+.dark .text-primary-700 {
+    color: #e8eaed;
+}
+
+.dark .text-primary-500 {
+    color: #ffffff;
+}
+
+.dark .text-primary-300 {
+    color: #c9cdd4;
+}
+
+.dark .text-primary-200 {
+    color: #9ca3af;
+}
+
+.dark .text-primary-100 {
+    color: #6b7280;
+}
+
+.dark .bg-primary-50 {
+    background-color: #1e2530;
+}
+
+.dark .bg-primary-100 {
+    background-color: #2a3441;
+}
+
+.dark .bg-primary-200 {
+    background-color: #374151;
+}
+
+.dark .bg-primary-300 {
+    background-color: #4b5563;
+}
+
+.dark .bg-primary-500 {
+    background-color: #1a1f2e;
+}
+
+.dark .bg-primary-700 {
+    background-color: #141924;
+}
+
+.dark .bg-primary-900 {
+    background-color: #0a0f1a;
+}
+
+.dark .border-primary-500 {
+    border-color: #374151;
+}
+
+.dark .border-primary-100 {
+    border-color: #4b5563;
+}
+
+/* Secondary colors - enhanced orange for dark mode */
+.dark .text-secondary-500 {
+    color: #ffa726;
+}
+
+.dark .text-secondary-400 {
+    color: #ffb74d;
+}
+
+.dark .bg-secondary-50 {
+    background-color: #2d1810;
+}
+
+.dark .bg-secondary-100 {
+    background-color: #1a1f2e;
+}
+
+.dark .bg-secondary-500 {
+    background-color: #e65100;
+}
+
+/* Danger colors for dark mode */
+.dark .text-danger-500 {
+    color: #ef5350;
+}
+
+.dark .bg-danger-50 {
+    background-color: #2d1414;
+}
+
+.dark .bg-danger-500 {
+    background-color: #d32f2f;
+}
+
+/* Points colors for dark mode */
+.dark .text-points-1 {
+    color: #4caf50;
+}
+
+.dark .text-points-2 {
+    color: #66bb6a;
+}
+
+.dark .text-points-3 {
+    color: #f2b705;
+}
+
+.dark .bg-points-10 {
+    background-color: #1b2e1b;
+}
+
+.dark .bg-points-20 {
+    background-color: #2d1f0d;
+}
+
+/* Chart colors for dark mode */
+.dark .fill-danger-500 {
+    fill: #ef5350 !important;
+}
+
+.dark .fill-points-3 {
+    fill: #f2b705 !important;
+}
+
+.dark .fill-secondary-500 {
+    fill: #ffa726 !important;
+}
+
+.dark .fill-primary-500 {
+    fill: #ffffff !important;
+}
+
+/* Form elements */
+.dark input,
+.dark textarea,
+.dark select {
+    background-color: #1a1f2e;
+    color: #e8eaed;
+    border-color: #374151;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #9ca3af;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+    border-color: #ffa726;
+    box-shadow: 0 0 0 1px #ffa726;
+}
+
+/* Cards and containers */
+.dark .shadow {
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.3),
+        0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dark .shadow-lg {
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.3),
+        0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Icon color adjustments for dark mode - exclude charts */
+.dark svg:not([data-chart]) {
+    filter: brightness(0) invert(1);
+}
+
+/* Specific icon overrides where needed */
+.dark .icon-primary svg {
+    filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(204deg);
+}
+
+.dark .icon-secondary svg {
+    filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(25deg);
+}

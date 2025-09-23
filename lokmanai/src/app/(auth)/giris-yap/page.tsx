@@ -1,5 +1,5 @@
-import AuthLayout from '@/components/page-components/auth/AuthLayout';
-import SignInForm from '@/components/page-components/auth/SignInForm';
+import AuthLayout from '@/components/features/auth/AuthLayout';
+import SignInForm from '@/components/features/auth/SignInForm';
 
 const SignIn = () => {
     return (

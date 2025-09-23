@@ -1,4 +1,4 @@
-import AIChat from "@/components/page-components/lokmanai/AIChat";
+import AIChat from "@/components/features/lokmanai/AIChat";
 import React from "react";
 
 const Home = () => {

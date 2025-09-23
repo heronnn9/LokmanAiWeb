@@ -1,0 +1,246 @@
+@layer utilities {
+    /* Typography utilities mapped from previous theme.fontSize */
+    .text-heading-1 {
+        font-size: 24px;
+        line-height: 56px;
+        font-weight: 350;
+    }
+    .text-heading-1-mobile {
+        font-size: 20px;
+        line-height: 44px;
+        font-weight: 350;
+    }
+    .text-heading-2 {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 350;
+    }
+    .text-heading-3 {
+        font-size: 16px;
+        line-height: 28px;
+        font-weight: 350;
+    }
+    .text-heading-2-mobile {
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 350;
+    }
+    .text-heading-5 {
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 325;
+    }
+    .text-login-heading {
+        font-size: 56px;
+        font-weight: 325;
+    }
+    .text-landing-heading {
+        font-size: 36px;
+        line-height: 44px;
+        font-weight: 350;
+    }
+    .text-main-heading {
+        font-size: 20px;
+        line-height: 56px;
+        font-weight: 350;
+    }
+    .text-sub-heading {
+        font-size: 16px;
+        line-height: 56px;
+        font-weight: 350;
+    }
+    .text-body {
+        font-size: 14px;
+        line-height: 19.6px;
+        font-weight: 350;
+    }
+    .text-loader {
+        font-size: 32px;
+        line-height: 44.8px;
+        font-weight: 400;
+    }
+    .text-loader-mobile {
+        font-size: 20px;
+        line-height: 28px;
+        font-weight: 400;
+    }
+    .text-button {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 400;
+    }
+    .text-button-light {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-button-xs {
+        font-size: 12px;
+        line-height: 26px;
+        font-weight: 400;
+    }
+    .text-button-sm {
+        font-size: 14px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-button-sm-light {
+        font-size: 14px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-input {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-input-placeholder {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 325;
+    }
+    .text-input-label {
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 350;
+    }
+    .text-input-code {
+        font-size: 24px;
+        line-height: 26px;
+        font-weight: 325;
+    }
+    .text-info-small {
+        font-size: 12px;
+        line-height: 14.4px;
+        font-weight: 350;
+    }
+    .text-product-name {
+        font-size: 16px;
+        line-height: 20.8px;
+        font-weight: 350;
+    }
+    .text-product-price {
+        font-size: 14px;
+        line-height: 18.2px;
+        font-weight: 350;
+    }
+    .text-product-price-text {
+        font-size: 14px;
+        line-height: 14px;
+        font-weight: 350;
+    }
+    .text-product-list-item-small {
+        font-size: 12px;
+        line-height: 15.6px;
+        font-weight: 350;
+    }
+    .text-product-detail-price {
+        font-size: 15px;
+        line-height: 19.5px;
+        font-weight: 350;
+    }
+    .text-product-detail-name {
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-offer-brand-name {
+        font-size: 16px;
+        line-height: 20.8px;
+        font-weight: 350;
+    }
+    .text-offer-price {
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-offer-list-item-price {
+        font-size: 20px;
+        line-height: 30px;
+        font-weight: 350;
+    }
+    .text-footer-follow-text {
+        font-size: 20px;
+        line-height: 30px;
+        font-weight: 350;
+    }
+    .text-footer-header {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: 350;
+    }
+    .text-offer-list-item-rate {
+        font-size: 16px;
+        line-height: 28px;
+        font-weight: 400;
+    }
+    .text-filter {
+        font-size: 14px;
+        line-height: 26px;
+        font-weight: 325;
+    }
+    .text-filter-heading {
+        font-size: 14px;
+        line-height: 18.2px;
+        font-weight: 350;
+    }
+    .text-seller-dates {
+        font-size: 16px;
+        line-height: 20.8px;
+        font-weight: 325;
+    }
+    .text-checkbox {
+        font-size: 14px;
+        line-height: 18.2px;
+        font-weight: 325;
+    }
+    .text-date {
+        font-size: 12px;
+        line-height: 24px;
+        font-weight: 325;
+    }
+    .text-status-label {
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 350;
+    }
+    .text-label {
+        font-size: 12px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-general-search-headers {
+        font-size: 14px;
+        line-height: 18.2px;
+        font-weight: 350;
+    }
+    .text-nav-action-button {
+        font-size: 10px;
+        font-weight: 350;
+    }
+    .text-order-quantity {
+        font-size: 32px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-landing-heading-3 {
+        font-size: 28px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-home-section-header {
+        font-size: 32px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-home-section-header-mobile {
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+    .text-home-section-header-laptop {
+        font-size: 24px;
+        line-height: 26px;
+        font-weight: 350;
+    }
+}

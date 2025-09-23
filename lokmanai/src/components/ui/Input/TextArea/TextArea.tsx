@@ -51,7 +51,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
                             isNegativeExperience && '!h-[160px]',
                             // Background color
                             {
-                                'bg-primary-50':
+                                'bg-primary-50 dark:!bg-neutral-900':
                                     !isError &&
                                     !props.disabled &&
                                     !props.readOnly &&
@@ -86,9 +86,9 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
                             'px-4 pb-4 pt-2',
                             // Focus state
                             !isError &&
-                                !props.readOnly &&
-                                !props.disabled &&
-                                'focus:bg-neutral-0 focus:text-primary-500 focus:ring-[1px] focus:ring-neutral-500',
+                            !props.readOnly &&
+                            !props.disabled &&
+                            'focus:bg-neutral-0 focus:text-primary-500 focus:ring-[1px] focus:ring-neutral-500',
                             {
                                 'focus:ring-[1px] focus:ring-danger-500':
                                     isError,
