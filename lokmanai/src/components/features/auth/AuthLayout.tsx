@@ -10,7 +10,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             {/* Main Content */}
             <div className="flex min-h-screen">
                 {/* Left Side - Decorative */}
-                <div className="bg-primary-50 hidden items-center justify-center p-12 lg:flex lg:w-1/2">
+                <div style={{ backgroundImage: 'url(/img/auth-cover.png)' }} className="bg-primary-50 hidden items-center justify-center p-12 lg:flex lg:w-1/2">
                     <div className="max-w-md text-center">
                         <div className="">
                             <h1 className="text-primary-700 text-login-heading flex items-center gap-1">
@@ -21,9 +21,9 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                                 </b>
                             </h1>
                         </div>
-                        
+
                         <p className="text-primary-300 text-text-input leading-relaxed">
-                             Lokman Firmalar hakkında tüm bilgileri alın. 
+                            Lokman Firmalar hakkında tüm bilgileri alın.
                         </p>
                     </div>
                 </div>

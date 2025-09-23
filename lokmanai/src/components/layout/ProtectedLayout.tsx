@@ -5,7 +5,7 @@ import { useAppSelector } from '@/store/hooks';
 import classNames from 'classnames';
 import { ReactNode, useRef, useState } from 'react';
 import ThemeSwitch from '../ui/ThemeSwitch';
-import Sidebar from '../ui/Navbar/Sidebar';
+import Sidebar from '../ui/Navbar/Sidebar/Sidebar';
 
 interface ProtectedLayoutProps {
     children: ReactNode;

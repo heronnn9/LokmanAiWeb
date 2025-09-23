@@ -1,7 +1,7 @@
+import MessageCard from '@/components/ui/Card/MessageCard'
+import { Message } from '@/store/slices/chatSlice'
 import React from 'react'
 import AIForm from './AIForm'
-import { Message } from '@/store/slices/chatSlice'
-import MessageCard from '@/components/ui/Card/MessageCard'
 import { DEFAULT_MESSAGES } from './constants/default.messages'
 
 const AIChatWithoutMessage = ({ handleSubmit, question, setQuestion, loading }: { handleSubmit: (e: React.FormEvent) => void, question: string, setQuestion: (question: string) => void, loading: boolean, messages?: Message[] }) => {
