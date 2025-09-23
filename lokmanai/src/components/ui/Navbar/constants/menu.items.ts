@@ -1,7 +1,7 @@
 export const MENU_ITEMS = [
     {
         id: 'dashboard',
-        label: 'LokmanAI Chat',
+        label: 'LokmanAI',
         href: '/',
         icon: 'edit',
     },

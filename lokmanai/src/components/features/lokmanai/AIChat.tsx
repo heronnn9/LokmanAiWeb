@@ -9,6 +9,7 @@ import AILoading from "./AILoading";
 import AIErrorMessage from "@/components/ui/ErrorMessages/AIErrorMessage";
 import Messages from "./Messages";
 import AIChatWithoutMessage from "./AIChatWithoutMessage";
+import Icon from "@/components/ui/Icon";
 
 const AIChat = () => {
   const [question, setQuestion] = useState("");
@@ -82,62 +83,63 @@ const AIChat = () => {
 
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-100 ">
-      <div className="flex-1 flex   ">
-        <div className="w-full  h-full flex flex-col ">
-          {messages.length === 0 ? (
-            <AIChatWithoutMessage
+    <div className="flex flex-col h-screen bg-neutral-100 relative">
+      {messages.length === 0 ? (
+        <AIChatWithoutMessage
+          handleSubmit={handleSubmit}
+          question={question}
+          setQuestion={setQuestion}
+          loading={loading}
+          messages={messages}
+        />
+      ) : (
+        <>
+          {/* Messages Area - Scrollable */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Clear Messages Button */}
+            <div className="bg-white border-l border-r border-neutral-200 px-4 py-2 dark:border-none flex-shrink-0">
+              <button
+                onClick={() => dispatch(clearMessages())}
+                className="text-sm text-red-600 hover:text-red-800 flex gap-2 "
+              >
+                Sohbeti Sil
+                <Icon icon="delete" size={16} color="#FF0000" />
+              </button>
+            </div>
+
+            {/* Messages Container - Scrollable */}
+            <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-none pb-4">
+              <div className="p-4 space-y-4">
+                {messages.map((message, index) => (
+                  <Messages message={message} key={index} />
+                ))}
+
+                {loading && (
+                  <AILoading />
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+            </div>
+
+            {error && (
+              <div className="flex-shrink-0">
+                <AIErrorMessage error={error} />
+              </div>
+            )}
+          </div>
+
+          {/* Fixed Form Container at Bottom */}
+          <div className="bg-white border border-neutral-200 p-4 dark:border-none flex-shrink-0 sticky bottom-0 z-10">
+            <AIForm
               handleSubmit={handleSubmit}
               question={question}
               setQuestion={setQuestion}
               loading={loading}
-              messages={messages}
             />
-
-          ) : (
-            <>
-              {/* Clear Messages Button */}
-              <div className="bg-white border-l border-r border-neutral-200 px-4 py-2 dark:border-none">
-                <button
-                  onClick={() => dispatch(clearMessages())}
-                  className="text-sm text-red-600 hover:text-red-800 underline"
-                >
-                  Mesajları Temizle
-                </button>
-              </div>
-
-              {/* Messages Container */}
-              <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-none">
-                <div className="p-4 space-y-4">
-                  {messages.map((message, index) => (
-                    <Messages message={message} key={index} />
-                  ))}
-
-                  {loading && (
-                    <AILoading />
-                  )}
-
-                  <div ref={messagesEndRef} />
-                </div>
-              </div>
-
-              {error && (
-                <AIErrorMessage error={error} />
-              )}
-
-              {/* Form Container */}
-              <div className="bg-white border border-neutral-200 p-4 dark:border-none">
-                <AIForm
-                  handleSubmit={handleSubmit}
-                  question={question}
-                  setQuestion={setQuestion}
-                  loading={loading}
-                />
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
