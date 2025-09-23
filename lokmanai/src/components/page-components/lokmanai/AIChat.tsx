@@ -2,11 +2,13 @@
 
 import { useAskMutation } from "@/services/aiApi";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addMessage, setLoading, setError, clearError, clearMessages, Message } from "@/store/slices/chatSlice";
-import React, { useState, useRef, useEffect } from "react";
+import { addMessage, clearError, clearMessages, Message, setError, setLoading } from "@/store/slices/chatSlice";
+import React, { useEffect, useRef, useState } from "react";
 import AIForm from "./AIForm";
 import AILoading from "./AILoading";
-import Image from "next/image";
+import AIErrorMessage from "@/components/ui/ErrorMessages/AIErrorMessage";
+import Messages from "./Messages";
+import AIChatWithoutMessage from "./AIChatWithoutMessage";
 
 const AIChat = () => {
   const [question, setQuestion] = useState("");
@@ -83,73 +85,57 @@ const AIChat = () => {
     <div className="flex flex-col h-screen bg-neutral-100 ">
       <div className="flex-1 flex   ">
         <div className="w-full  h-full flex flex-col ">
-          {/* Messages Container */}
-          <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-none">
-            <div className="p-4 space-y-4">
-              {messages.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
-                  <p>Merhaba! Size nasıl yardımcı olabilirim?</p>
-                </div>
-              ) : (
-                messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg px-4 py-2 ${message.type === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 text-gray-800 border border-gray-200'
-                        }`}
-                    >
-                      <div className="whitespace-pre-wrap break-words">
-                        {message.content}
-                      </div>
-                      <div className={`text-xs mt-1 ${message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
-                        }`}>
-                        {message.timestamp.toLocaleTimeString('tr-TR', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-
-              {/* Loading indicator */}
-              {loading && (
-                <AILoading />
-              )}
-
-              <div ref={messagesEndRef} />
-            </div>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-white border-l border-r border-neutral-200 px-4 py-2 dark:border-none">
-              <div className="p-3 bg-red-100 border border-red-300 rounded-md">
-                <p className="text-red-700 text-sm">Hata: {error}</p>
-                <button
-                  onClick={() => dispatch(clearError())}
-                  className="text-red-600 hover:text-red-800 text-xs mt-1 underline"
-                >
-                  Kapat
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Form Container */}
-          <div className="bg-white border border-neutral-200 rounded-b-lg p-4 dark:border-none">
-            <AIForm
+          {messages.length === 0 ? (
+            <AIChatWithoutMessage
               handleSubmit={handleSubmit}
               question={question}
               setQuestion={setQuestion}
               loading={loading}
+              messages={messages}
             />
-          </div>
+
+          ) : (
+            <>
+              {/* Clear Messages Button */}
+              <div className="bg-white border-l border-r border-neutral-200 px-4 py-2 dark:border-none">
+                <button
+                  onClick={() => dispatch(clearMessages())}
+                  className="text-sm text-red-600 hover:text-red-800 underline"
+                >
+                  Mesajları Temizle
+                </button>
+              </div>
+
+              {/* Messages Container */}
+              <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-none">
+                <div className="p-4 space-y-4">
+                  {messages.map((message, index) => (
+                    <Messages message={message} key={index} />
+                  ))}
+
+                  {loading && (
+                    <AILoading />
+                  )}
+
+                  <div ref={messagesEndRef} />
+                </div>
+              </div>
+
+              {error && (
+                <AIErrorMessage error={error} />
+              )}
+
+              {/* Form Container */}
+              <div className="bg-white border border-neutral-200 p-4 dark:border-none">
+                <AIForm
+                  handleSubmit={handleSubmit}
+                  question={question}
+                  setQuestion={setQuestion}
+                  loading={loading}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
