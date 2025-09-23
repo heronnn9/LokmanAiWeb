@@ -4,6 +4,7 @@ import { askApi } from '@/services/aiApi';
 import userReducer from '@/store/slices/userSlice';
 import toastReducer from '@/store/slices/toastSlice';
 import chatReducer from '@/store/slices/chatSlice';
+import modalReducer from '@/store/slices/modalSlice';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     [askApi.reducerPath]: askApi.reducer,
     user: userReducer,
     toast: toastReducer,
-    chat: chatReducer,
+    chat: chatReducer,  
+    modal: modalReducer,
 });
 
 const persistConfig = {

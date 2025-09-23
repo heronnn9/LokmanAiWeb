@@ -20,7 +20,7 @@ const ProtectedLayout = ({
     showSidebar = true, // Varsayılan olarak sidebar göster
     showNavbar = false,
 }: ProtectedLayoutProps) => {
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const sidebarRef = useRef<{ toggleMobile: () => void }>(null);
 

@@ -1,4 +1,4 @@
-import Button from "@/components/ui/Button";
+import Button from "@/components/ui/Button/Button";
 import TextArea from "@/components/ui/Input/TextArea/TextArea";
 import { Message } from "@/store/slices/chatSlice";
 import classNames from "classnames";

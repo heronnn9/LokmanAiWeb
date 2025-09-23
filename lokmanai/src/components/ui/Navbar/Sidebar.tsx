@@ -1,11 +1,14 @@
 import { MenuItem, SidebarProps, SidebarRef } from '@/@interfaces/theme';
 import { useScreenSize } from '@/hooks/useScreenSize';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { logout } from '@/store/slices/userSlice';
+import { clearAuthCookies, sessionTokens } from '@/utils/cookie';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import Icon from '../Icon';
+import Popup from '../Popup/Popup';
 import { MENU_ITEMS } from './constants/menu.items';
 
 const menuItems: MenuItem[] = [...MENU_ITEMS];
@@ -13,9 +16,10 @@ const menuItems: MenuItem[] = [...MENU_ITEMS];
 const Sidebar = forwardRef<SidebarRef, SidebarProps>(
     ({ isCollapsed = false, onToggle }, ref) => {
         const pathname = usePathname();
+        const router = useRouter();
+        const dispatch = useAppDispatch();
         const [isMobileOpen, setIsMobileOpen] = useState(false);
-        const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-
+        const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
         const isMobile = useScreenSize();
 
         // Ref methods
@@ -44,6 +48,22 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
             if (isMobile) {
                 setIsMobileOpen(false);
             }
+        };
+
+        // Logout handler
+        const handleLogout = () => {
+            // Clear Redux state
+            dispatch(logout());
+
+            // Clear cookies and session storage
+            clearAuthCookies();
+            sessionTokens.clear();
+
+            // Close popup
+            setIsUserPopupOpen(false);
+
+            // Redirect to login page
+            router.push('/giris-yap');
         };
 
         const user = useAppSelector((state) => state.user);
@@ -148,31 +168,56 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(
 
                     {/* User Section */}
                     <div className="absolute right-0 bottom-0 left-0 border-t border-neutral-200 p-4 dark:border-secondary-500">
-                        <div
-                            className={`hover:bg-primary-50 flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors ${!isMobile && isCollapsed ? 'justify-center' : ''} `}
-                        >
-                            <div className="bg-primary-100 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-                                <Image
-                                    src="/icons/profile.svg"
-                                    alt="Profile"
-                                    width={16}
-                                    height={16}
-                                    className="h-4 w-4 dark:brightness-0 dark:invert"
-                                />
+                        <div className="relative">
+                            <div
+                                onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+                                className={`hover:bg-primary-50 dark:hover:bg-[#1e2530] flex cursor-pointer items-center space-x-3 rounded-lg p-3 transition-colors ${!isMobile && isCollapsed ? 'justify-center' : ''} `}
+                            >
+                                <div className="bg-primary-100 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
+                                    <Image
+                                        src="/icons/profile.svg"
+                                        alt="Profile"
+                                        width={16}
+                                        height={16}
+                                        className="h-4 w-4 dark:brightness-0 dark:invert"
+                                    />
+                                </div>
+
+                                {(isMobile || !isCollapsed) && (
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-button-sm font-gotham truncate text-neutral-900 dark:text-neutral-100">
+                                            {user.username}
+                                        </p>
+                                        <p className="text-info-small truncate text-neutral-500 dark:text-neutral-400">
+                                            {user.mail}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
-                            {(isMobile || !isCollapsed) && (
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-button-sm font-gotham truncate text-neutral-900">
-                                        {user.username}
-                                    </p>
-                                    <p className="text-info-small truncate text-neutral-500">
-                                        {user.mail}
-                                    </p>
+                            {/* User Popup Menu */}
+                            <Popup
+                                isOpen={isUserPopupOpen}
+                                onClose={() => setIsUserPopupOpen(false)}
+                                position="bottom-left"
+                                className="min-w-[200px]"
+                            >
+                                <div className="py-2">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full px-4 py-3 text-left text-button-sm font-gotham hover:bg-neutral-50 dark:hover:bg-secondary-700 text-neutral-700 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center space-x-3"
+                                    >
+                                        <Icon
+                                            icon="logout"
+                                            size={16}
+                                            color="currentColor"
+                                            className="dark:brightness-0 dark:invert"
+                                        />
+                                        <span>Çıkış Yap</span>
+                                    </button>
                                 </div>
-                            )}
+                            </Popup>
                         </div>
-
                     </div>
                 </div>
             </>
