@@ -13,6 +13,8 @@ import {
   finishStreamingMessage
 } from "@/store/slices/chatSlice";
 import React, { useEffect, useRef, useState } from "react";
+import axios, { CancelTokenSource } from 'axios';
+import { streamingChat } from '@/services/aiApi';
 import AIForm from "./AIForm";
 import AILoading from "./AILoading";
 import AIErrorMessage from "@/components/ui/ErrorMessages/AIErrorMessage";
@@ -26,8 +28,8 @@ const AIChat = () => {
   const { messages, loading, error } = useAppSelector((state) => state.chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // SSE için EventSource referansı
-  const eventSourceRef = useRef<EventSource | null>(null);
+  // SSE için axios CancelToken referansı
+  const cancelTokenSourceRef = useRef<CancelTokenSource | null>(null);
 
   // Otomatik scroll fonksiyonu
   const scrollToBottom = () => {
@@ -38,12 +40,12 @@ const AIChat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Cleanup: Component unmount olduğunda EventSource'u kapat
+  // Cleanup: Component unmount olduğunda axios request'ini iptal et
   useEffect(() => {
     return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-        eventSourceRef.current = null;
+      if (cancelTokenSourceRef.current) {
+        cancelTokenSourceRef.current.cancel('Component unmounted');
+        cancelTokenSourceRef.current = null;
       }
     };
   }, []);
@@ -81,68 +83,51 @@ const AIChat = () => {
     try {
       // Son AI mesajının response ID'sini bul (follow-up için)
       const lastAiMessage = messages.filter(msg => msg.type === 'ai' && msg.responseId).pop();
-      const followUpId = lastAiMessage?.responseId || '';
+      const previousRespondId = lastAiMessage?.responseId || '';
 
-      // URL'i oluştur - follow-up varsa id parametresi ekle
-      let url = `http://192.168.1.143:5001/ask-stream?ask=${encodeURIComponent(currentQuestion)}`;
-      if (followUpId) {
-        url += `&id=${encodeURIComponent(followUpId)}`;
-      }
+      // Request body'sini hazırla
+      const requestBody = {
+        user_text: currentQuestion,
+        ...(previousRespondId && { previous_respond_id: previousRespondId })
+      };
 
-      // EventSource ile SSE bağlantısı kur
-      const eventSource = new EventSource(url);
-      eventSourceRef.current = eventSource;
+      // CancelToken oluştur
+      const cancelTokenSource = axios.CancelToken.source();
+      cancelTokenSourceRef.current = cancelTokenSource;
 
-      eventSource.onmessage = (event) => {
-        const eventData = event.data;
-
-        if (event.type === 'token') {
-          // Token geldiğinde mesajı güncelle
+      // Streaming callbacks
+      const callbacks = {
+        onToken: (data: string) => {
           dispatch(updateStreamingMessage({
             id: aiMessageId,
-            content: eventData
+            content: data
           }));
+        },
+        onDone: (responseId: string) => {
+          dispatch(finishStreamingMessage({
+            id: aiMessageId,
+            responseId: responseId
+          }));
+          dispatch(setLoading(false));
+          cancelTokenSourceRef.current = null;
+        },
+        onError: (error: string) => {
+          dispatch(setError(error));
+          dispatch(updateStreamingMessage({
+            id: aiMessageId,
+            content: `Hata: ${error}`
+          }));
+          dispatch(finishStreamingMessage({
+            id: aiMessageId,
+            responseId: ''
+          }));
+          dispatch(setLoading(false));
+          cancelTokenSourceRef.current = null;
         }
       };
 
-      eventSource.addEventListener('token', (event) => {
-        const tokenData = event.data;
-        dispatch(updateStreamingMessage({
-          id: aiMessageId,
-          content: tokenData
-        }));
-      });
-
-      eventSource.addEventListener('done', (event) => {
-        const responseId = event.data;
-        dispatch(finishStreamingMessage({
-          id: aiMessageId,
-          responseId: responseId
-        }));
-
-        eventSource.close();
-        eventSourceRef.current = null;
-        dispatch(setLoading(false));
-      });
-
-      eventSource.onerror = () => {
-        dispatch(setError('Bağlantı hatası oluştu'));
-
-        // Hata durumunda mesajı güncelle
-        dispatch(updateStreamingMessage({
-          id: aiMessageId,
-          content: 'Hata: Bağlantı sorunu yaşandı'
-        }));
-
-        dispatch(finishStreamingMessage({
-          id: aiMessageId,
-          responseId: ''
-        }));
-
-        eventSource.close();
-        eventSourceRef.current = null;
-        dispatch(setLoading(false));
-      };
+      // Streaming chat'i başlat
+      await streamingChat(requestBody, callbacks, cancelTokenSource);
 
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Bir hata oluştu";
@@ -159,6 +144,7 @@ const AIChat = () => {
       }));
 
       dispatch(setLoading(false));
+      cancelTokenSourceRef.current = null;
     }
   };
 
