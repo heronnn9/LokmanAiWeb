@@ -15,7 +15,7 @@ const InputLabel = ({ isError, isDisabled, ...props }: InputLabelProps) => {
                 // text-color
                 { 'text-danger-500 dark:text-danger-100': isError },
                 {
-                    'text-primary-700 dark:!text-primary-700':
+                    'text-primary-700 dark:!text-primary-50':
                         !isError && !isDisabled,
                 },
                 { 'text-primary-200 dark:text-primary-100': isDisabled }
