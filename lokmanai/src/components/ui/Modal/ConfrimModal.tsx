@@ -46,7 +46,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-end gap-3 p-6 pt-0 border-t  dark:border-secondary-700">
+                    <div className="flex items-center justify-end gap-3 p-6 pt-0 ">
                         <Button
                             variant="secondary"
                             size="sm"
