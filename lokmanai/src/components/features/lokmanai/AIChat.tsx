@@ -1,8 +1,17 @@
 'use client';
 
-import { useAskMutation } from "@/services/aiApi";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addMessage, clearError, clearMessages, Message, setError, setLoading } from "@/store/slices/chatSlice";
+import {
+  addMessage,
+  clearError,
+  clearMessages,
+  Message,
+  setError,
+  setLoading,
+  startStreamingMessage,
+  updateStreamingMessage,
+  finishStreamingMessage
+} from "@/store/slices/chatSlice";
 import React, { useEffect, useRef, useState } from "react";
 import AIForm from "./AIForm";
 import AILoading from "./AILoading";
@@ -17,7 +26,8 @@ const AIChat = () => {
   const { messages, loading, error } = useAppSelector((state) => state.chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [ask] = useAskMutation();
+  // SSE için EventSource referansı
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   // Otomatik scroll fonksiyonu
   const scrollToBottom = () => {
@@ -27,6 +37,16 @@ const AIChat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Cleanup: Component unmount olduğunda EventSource'u kapat
+  useEffect(() => {
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,36 +66,98 @@ const AIChat = () => {
     const currentQuestion = question;
     setQuestion(""); // Input'u hemen temizle
 
-    try {
-      const result = await ask({ ask: currentQuestion });
+    // AI mesajı için boş mesaj oluştur
+    const aiMessageId = (Date.now() + 1).toString();
+    const aiMessage: Message = {
+      id: aiMessageId,
+      type: 'ai',
+      content: '',
+      timestamp: new Date(),
+      isStreaming: true
+    };
 
-      // AI cevabını ekle
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: typeof result === 'string'
-          ? result
-          : String((result as any)?.response || (result as any)?.data || JSON.stringify(result, null, 2)).replace(/\\u[\dA-F]{4}/gi, (match) =>
-            String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16))
-          ),
-        timestamp: new Date()
+    dispatch(startStreamingMessage(aiMessage));
+
+    try {
+      // Son AI mesajının response ID'sini bul (follow-up için)
+      const lastAiMessage = messages.filter(msg => msg.type === 'ai' && msg.responseId).pop();
+      const followUpId = lastAiMessage?.responseId || '';
+
+      // URL'i oluştur - follow-up varsa id parametresi ekle
+      let url = `http://192.168.1.143:5001/ask-stream?ask=${encodeURIComponent(currentQuestion)}`;
+      if (followUpId) {
+        url += `&id=${encodeURIComponent(followUpId)}`;
+      }
+
+      // EventSource ile SSE bağlantısı kur
+      const eventSource = new EventSource(url);
+      eventSourceRef.current = eventSource;
+
+      eventSource.onmessage = (event) => {
+        const eventData = event.data;
+
+        if (event.type === 'token') {
+          // Token geldiğinde mesajı güncelle
+          dispatch(updateStreamingMessage({
+            id: aiMessageId,
+            content: eventData
+          }));
+        }
       };
 
-      dispatch(addMessage(aiMessage));
+      eventSource.addEventListener('token', (event) => {
+        const tokenData = event.data;
+        dispatch(updateStreamingMessage({
+          id: aiMessageId,
+          content: tokenData
+        }));
+      });
+
+      eventSource.addEventListener('done', (event) => {
+        const responseId = event.data;
+        dispatch(finishStreamingMessage({
+          id: aiMessageId,
+          responseId: responseId
+        }));
+
+        eventSource.close();
+        eventSourceRef.current = null;
+        dispatch(setLoading(false));
+      });
+
+      eventSource.onerror = () => {
+        dispatch(setError('Bağlantı hatası oluştu'));
+
+        // Hata durumunda mesajı güncelle
+        dispatch(updateStreamingMessage({
+          id: aiMessageId,
+          content: 'Hata: Bağlantı sorunu yaşandı'
+        }));
+
+        dispatch(finishStreamingMessage({
+          id: aiMessageId,
+          responseId: ''
+        }));
+
+        eventSource.close();
+        eventSourceRef.current = null;
+        dispatch(setLoading(false));
+      };
+
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Bir hata oluştu";
       dispatch(setError(errorMsg));
 
-      // Hata durumunda AI mesajı ekle
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: `Hata: ${errorMsg}`,
-        timestamp: new Date()
-      };
+      dispatch(updateStreamingMessage({
+        id: aiMessageId,
+        content: `Hata: ${errorMsg}`
+      }));
 
-      dispatch(addMessage(errorMessage));
-    } finally {
+      dispatch(finishStreamingMessage({
+        id: aiMessageId,
+        responseId: ''
+      }));
+
       dispatch(setLoading(false));
     }
   };
