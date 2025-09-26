@@ -8,7 +8,7 @@ const AIChatWithoutMessage = ({ handleSubmit, question, setQuestion, loading }: 
     return (
         <div className="flex-1 flex flex-col items-center justify-center bg-white border-l border-r border-neutral-200 dark:border-none">
             <div className="text-center text-gray-500 mb-8">
-                <p>Merhaba! Size nasıl yardımcı olabilirim?</p>
+                <p>Merhaba! Ben LokmanAI, Size nasıl yardımcı olabilirim?</p>
             </div>
             <div className="w-full max-w-2xl px-4 flex flex-col gap-4">
 
