@@ -1,0 +1,5 @@
+service:
+  wisefront-server:
+      image: wisefront
+      restart: always
+      port: 4000:3000
