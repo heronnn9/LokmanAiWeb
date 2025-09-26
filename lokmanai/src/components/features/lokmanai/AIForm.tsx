@@ -5,7 +5,6 @@ import classNames from "classnames";
 import React from "react";
 
 const AIForm = ({ handleSubmit, question, setQuestion, loading, messages }: { handleSubmit: (e: React.FormEvent) => void, question: string, setQuestion: (question: string) => void, loading: boolean, messages?: Message[] }) => {
-  console.log(messages);
   return (
     <form onSubmit={handleSubmit} className="flex gap-3 items-end  ">
       <div className="flex-1">

@@ -43,12 +43,12 @@ const Messages = ({ message }: { message: Message }) => {
                                 ),
                                 // Liste styling
                                 ul: ({ children }) => (
-                                    <ul className="list-disc list-inside space-y-1">
+                                    <ul className="list-disc list-outside space-y-1 pl-5">
                                         {children}
                                     </ul>
                                 ),
                                 ol: ({ children }) => (
-                                    <ol className="list-decimal list-inside space-y-1">
+                                    <ol className="list-decimal list-outside space-y-1 pl-5">
                                         {children}
                                     </ol>
                                 ),
@@ -106,7 +106,7 @@ const Messages = ({ message }: { message: Message }) => {
                                 ),
 
                                 li: ({ children }) => (
-                                    <li className="leading-relaxed">
+                                    <li className="leading-relaxed mb-2">
                                         {children}
                                     </li>
                                 ),
