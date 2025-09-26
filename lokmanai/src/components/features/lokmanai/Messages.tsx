@@ -1,9 +1,13 @@
 import React from 'react'
 import { Message } from '@/store/slices/chatSlice'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
+// import 'highlight.js/styles/github.css' // Syntax highlighting için CSS
 
 const Messages = ({ message }: { message: Message }) => {
-    // Eğer mesaj boşsa (streaming başlangıcında), hiçbir şey render etme
-    if (!message.content) {
+    // Eğer mesaj boşsa ve streaming değilse, hiçbir şey render etme
+    if (!message.content && !message.isStreaming) {
         return null;
     }
 
@@ -17,11 +21,69 @@ const Messages = ({ message }: { message: Message }) => {
                     : 'bg-gray-100 dark:bg-gray-600 text-gray-800 border dark:!text-gray-800 border-gray-200'
                     }`}
             >
-                <div className="whitespace-pre-wrap break-words">
-                    {message.content}
-                    {message.isStreaming && (
-                        <span className="inline-block w-2 h-4 bg-current ml-1 animate-pulse">|</span>
+                <div className="">
+                    {message.type === 'ai' ? (
+                        // AI mesajları için markdown render et
+                        <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            rehypePlugins={[rehypeHighlight]}
+                            components={{
+                                // Code block'lar için özel styling
+                                pre: ({ children }) => (
+                                    <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md overflow-x-auto">
+                                        {children}
+                                    </pre>
+                                ),
+                                code: ({ inline, children, ...props }: any) => (
+                                    inline ? (
+                                        <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">
+                                            {children}
+                                        </code>
+                                    ) : (
+                                        <code {...props}>{children}</code>
+                                    )
+                                ),
+                                // Liste styling
+                                ul: ({ children }) => (
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {children}
+                                    </ul>
+                                ),
+                                ol: ({ children }) => (
+                                    <ol className="list-decimal list-inside space-y-1">
+                                        {children}
+                                    </ol>
+                                ),
+                                // Link styling
+                                a: ({ href, children }) => (
+                                    <a
+                                        href={href}
+                                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {children}
+                                    </a>
+                                ),
+                                // Blockquote styling
+                                blockquote: ({ children }) => (
+                                    <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic">
+                                        {children}
+                                    </blockquote>
+                                ),
+                            }}
+                        >
+                            {message.content || ''}
+                        </ReactMarkdown>
+                    ) : (
+                        // User mesajları için normal text
+                        <div className="whitespace-pre-wrap break-words">
+                            {message.content}
+                        </div>
                     )}
+                    {/*  {message.isStreaming && (
+                        <span className="inline-block w-2 h-4 bg-current ml-1 animate-pulse">|</span>
+                    )} */}
                 </div>
                 <div className={`text-xs mt-1 ${message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
                     }`}>

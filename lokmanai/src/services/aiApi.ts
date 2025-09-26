@@ -50,86 +50,118 @@ export const askApi = createApi({
 
 export const { useAskMutation } = askApi;
 
-// Streaming Chat Function
+// Streaming Chat Function - Browser için düzeltilmiş
 export const streamingChat = async (
   request: StreamingRequest,
   callbacks: StreamingCallbacks,
   cancelTokenSource: CancelTokenSource
 ) => {
   try {
-    // Axios ile POST SSE request
-    const response = await axios.post('http://192.168.1.143:8000/ask/stream', request, {
+    // Fetch API ile SSE request (browser'da çalışır)
+    const response = await fetch('http://192.168.1.143:8000/ask/stream', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'text/event-stream',
         'Cache-Control': 'no-cache',
       },
-      responseType: 'stream',
-      cancelToken: cancelTokenSource.token,
+      body: JSON.stringify(request),
     });
 
-    // Stream okuma fonksiyonu
-    const readStream = () => {
-      let buffer = '';
-      
-      response.data.on('data', (chunk: Buffer) => {
-        buffer += chunk.toString();
-        const lines = buffer.split('\n');
-        
-        // Son satır incomplete olabilir, onu buffer'da tut
-        buffer = lines.pop() || '';
-        
-        for (const line of lines) {
-          if (line.trim() === '') continue;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-          if (line.startsWith('event: token')) {
-            continue; // Event type'ı atla
+    if (!response.body) {
+      throw new Error('Response body is null');
+    }
+
+    // ReadableStream reader oluştur
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let isDoneCallbackCalled = false;
+
+    // Stream okuma fonksiyonu
+    const readStream = async () => {
+      try {
+        while (true) {
+          // Cancel token kontrolü
+          if (cancelTokenSource.token.reason) {
+            reader.cancel();
+            break;
           }
+
+          const { done, value } = await reader.read();
           
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6); // "data: " kısmını kaldır
+          if (done) {
+            // Eğer onDone henüz çağrılmadıysa çağır
+            if (!isDoneCallbackCalled) {
+              callbacks.onDone('');
+              isDoneCallbackCalled = true;
+            }
+            break;
+          }
+
+          // Chunk'ı string'e çevir ve buffer'a ekle
+          const chunk = decoder.decode(value, { stream: true });
+          // console.warn('🔥 CHUNK:', chunk);
+          buffer += chunk;
+          
+          // SSE formatını parse et - buffer'ı kullanarak parse et
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Son satır incomplete olabilir
+          
+          let isTokenEvent = false;
+          
+          for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (trimmedLine === '') continue;
             
-            // Token data'sını callback ile gönder
-            callbacks.onToken(data);
-          }
-          
-          if (line.startsWith('event: done')) {
-            continue; // Event type'ı atla
-          }
-          
-          // Done event'inin data'sını yakala
-          if (line.startsWith('data: resp_')) {
-            const responseId = line.slice(6); // "data: " kısmını kaldır
-            callbacks.onDone(responseId);
-            return; // Stream'i bitir
+            if (trimmedLine === 'event: token') {
+              isTokenEvent = true;
+              continue;
+            }
+            
+            if (trimmedLine === 'event: done') {
+              isTokenEvent = false;
+              continue;
+            }
+            
+            if (trimmedLine.startsWith('data: ')) {
+              const data = trimmedLine.slice(6);
+              
+              if (data.startsWith('resp_')) {
+                if (!isDoneCallbackCalled) {
+                  callbacks.onDone(data);
+                  isDoneCallbackCalled = true;
+                }
+                reader.cancel();
+                return;
+              } else if (data.trim() !== '' && isTokenEvent) {
+                callbacks.onToken(data);
+              }
+            }
           }
         }
-      });
-
-      response.data.on('end', () => {
-        // Stream ended
-      });
-
-      response.data.on('error', (streamError: Error) => {
-        console.error('Stream reading error:', streamError);
-        callbacks.onError('Stream okuma hatası');
-      });
+      } catch (streamError) {
+        if (!cancelTokenSource.token.reason && !isDoneCallbackCalled) {
+          callbacks.onError('Stream okuma hatası');
+        }
+      }
     };
 
     // Stream okumaya başla
-    readStream();
+    await readStream();
 
   } catch (err) {
-    // Axios error handling
-    if (axios.isCancel(err)) {
-      console.log('Request cancelled:', err.message);
+    // Cancel kontrolü
+    if (cancelTokenSource.token.reason) {
+      console.log('Request cancelled');
       return;
     }
     
-    const errorMsg = axios.isAxiosError(err) 
-      ? err.response?.data?.message || err.message 
-      : err instanceof Error ? err.message : "Bir hata oluştu";
-      
+    const errorMsg = err instanceof Error ? err.message : "Bir hata oluştu";
     callbacks.onError(errorMsg);
   }
 };

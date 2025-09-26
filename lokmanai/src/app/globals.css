@@ -11,3 +11,73 @@
 @import '../styles/utilities.css';
 @import '../styles/typography.css';
 @import '../styles/base.css';
+
+/* Markdown Content Styling */
+.markdown-content {
+  @apply text-sm;
+}
+
+.markdown-content h1 {
+  @apply text-xl font-bold mb-3 mt-4 first:mt-0;
+}
+
+.markdown-content h2 {
+  @apply text-lg font-bold mb-2 mt-3 first:mt-0;
+}
+
+.markdown-content h3 {
+  @apply text-base font-bold mb-2 mt-3 first:mt-0;
+}
+
+.markdown-content p {
+  @apply mb-3 last:mb-0 leading-relaxed;
+}
+
+.markdown-content ul {
+  @apply mb-3 space-y-1;
+}
+
+.markdown-content ol {
+  @apply mb-3 space-y-1;
+}
+
+.markdown-content li {
+  @apply leading-relaxed;
+}
+
+.markdown-content strong {
+  @apply font-semibold;
+}
+
+.markdown-content em {
+  @apply italic;
+}
+
+.markdown-content code {
+  @apply text-xs font-mono;
+}
+
+.markdown-content pre {
+  @apply mb-3 text-xs;
+}
+
+.markdown-content blockquote {
+  @apply mb-3;
+}
+
+.markdown-content hr {
+  @apply my-4 border-gray-300 dark:border-gray-600;
+}
+
+.markdown-content table {
+  @apply w-full border-collapse mb-3;
+}
+
+.markdown-content th,
+.markdown-content td {
+  @apply border border-gray-300 dark:border-gray-600 px-2 py-1 text-left;
+}
+
+.markdown-content th {
+  @apply bg-gray-100 dark:bg-gray-700 font-semibold;
+}

@@ -14,6 +14,7 @@ interface ChatState {
   loading: boolean;
   error: string | null;
   streamingMessageId: string | null; // ID of currently streaming message
+  lastResponseId: string | null; // Son AI response'unun ID'si
 }
 
 const initialState: ChatState = {
@@ -21,6 +22,7 @@ const initialState: ChatState = {
   loading: false,
   error: null,
   streamingMessageId: null,
+  lastResponseId: null,
 };
 
 const chatSlice = createSlice({
@@ -38,6 +40,7 @@ const chatSlice = createSlice({
     },
     clearMessages: (state) => {
       state.messages = [];
+      state.lastResponseId = null; // Sohbeti silince response ID'yi de sıfırla
     },
     clearError: (state) => {
       state.error = null;
@@ -57,6 +60,10 @@ const chatSlice = createSlice({
       if (message) {
         message.isStreaming = false;
         message.responseId = action.payload.responseId;
+        // Son response ID'yi store'a kaydet
+        if (action.payload.responseId) {
+          state.lastResponseId = action.payload.responseId;
+        }
       }
       state.streamingMessageId = null;
     },

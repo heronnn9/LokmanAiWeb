@@ -25,13 +25,11 @@ import Icon from "@/components/ui/Icon";
 const AIChat = () => {
   const [question, setQuestion] = useState("");
   const dispatch = useAppDispatch();
-  const { messages, loading, error } = useAppSelector((state) => state.chat);
+  const { messages, loading, error, lastResponseId } = useAppSelector((state) => state.chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // SSE için axios CancelToken referansı
   const cancelTokenSourceRef = useRef<CancelTokenSource | null>(null);
 
-  // Otomatik scroll fonksiyonu
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -40,7 +38,6 @@ const AIChat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Cleanup: Component unmount olduğunda axios request'ini iptal et
   useEffect(() => {
     return () => {
       if (cancelTokenSourceRef.current) {
@@ -81,23 +78,23 @@ const AIChat = () => {
     dispatch(startStreamingMessage(aiMessage));
 
     try {
-      // Son AI mesajının response ID'sini bul (follow-up için)
-      const lastAiMessage = messages.filter(msg => msg.type === 'ai' && msg.responseId).pop();
-      const previousRespondId = lastAiMessage?.responseId || '';
-
-      // Request body'sini hazırla
       const requestBody = {
         user_text: currentQuestion,
-        ...(previousRespondId && { previous_respond_id: previousRespondId })
+        ...(lastResponseId && { previous_respond_id: lastResponseId })
       };
 
-      // CancelToken oluştur
       const cancelTokenSource = axios.CancelToken.source();
       cancelTokenSourceRef.current = cancelTokenSource;
 
       // Streaming callbacks
+      let isFirstToken = true;
       const callbacks = {
         onToken: (data: string) => {
+          if (isFirstToken) {
+            dispatch(setLoading(false));
+            isFirstToken = false;
+          }
+
           dispatch(updateStreamingMessage({
             id: aiMessageId,
             content: data
