@@ -1,5 +1,6 @@
-service:
+services:
   wisefront-server:
       image: wisefront
       restart: always
-      port: 4000:3000
+      ports: 
+        - "4000:3000"
