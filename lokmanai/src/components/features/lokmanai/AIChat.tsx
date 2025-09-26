@@ -175,7 +175,7 @@ const AIChat = () => {
             {/* Messages Container - Scrollable */}
             <div className="flex-1 bg-white border-l border-r border-neutral-200 overflow-y-auto dark:border-none pb-4">
               <div className="p-4 space-y-4">
-                {messages.map((message, index) => (
+                {messages.map((message: Message, index: number) => (
                   <Messages message={message} key={index} />
                 ))}
 
