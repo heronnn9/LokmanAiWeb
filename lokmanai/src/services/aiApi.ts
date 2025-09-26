@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import axios, { CancelTokenSource } from 'axios';
+import { CancelTokenSource } from 'axios';
 
 interface AiRequest {
   user_text: string;
@@ -7,7 +7,6 @@ interface AiRequest {
 }
 
 interface AiResponse {
-  // Add response interface based on what the API returns
   response?: string;
   data?: unknown;
 }
@@ -23,7 +22,6 @@ interface StreamingRequest {
   previous_respond_id?: string;
 }
 
-// Create a separate API instance for AI service
 export const askApi = createApi({
   reducerPath: 'aiApi',
   baseQuery: fetchBaseQuery({
@@ -34,7 +32,6 @@ export const askApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    // AI Endpoint
     ask: builder.mutation<AiResponse, AiRequest>({
         query: (request) => ({
             url: 'ask',
@@ -50,14 +47,13 @@ export const askApi = createApi({
 
 export const { useAskMutation } = askApi;
 
-// Streaming Chat Function - Browser için düzeltilmiş
+// Streaming Chat Function
 export const streamingChat = async (
   request: StreamingRequest,
   callbacks: StreamingCallbacks,
   cancelTokenSource: CancelTokenSource
 ) => {
   try {
-    // Fetch API ile SSE request (browser'da çalışır)
     const response = await fetch('http://192.168.1.143:8000/ask/stream', {
       method: 'POST',
       headers: {
@@ -76,17 +72,14 @@ export const streamingChat = async (
       throw new Error('Response body is null');
     }
 
-    // ReadableStream reader oluştur
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
     let isDoneCallbackCalled = false;
 
-    // Stream okuma fonksiyonu
     const readStream = async () => {
       try {
         while (true) {
-          // Cancel token kontrolü
           if (cancelTokenSource.token.reason) {
             reader.cancel();
             break;
@@ -95,7 +88,6 @@ export const streamingChat = async (
           const { done, value } = await reader.read();
           
           if (done) {
-            // Eğer onDone henüz çağrılmadıysa çağır
             if (!isDoneCallbackCalled) {
               callbacks.onDone('');
               isDoneCallbackCalled = true;
@@ -103,14 +95,12 @@ export const streamingChat = async (
             break;
           }
 
-          // Chunk'ı string'e çevir ve buffer'a ekle
           const chunk = decoder.decode(value, { stream: true });
           // console.warn('🔥 CHUNK:', chunk);
           buffer += chunk;
           
-          // SSE formatını parse et - buffer'ı kullanarak parse et
           const lines = buffer.split('\n');
-          buffer = lines.pop() || ''; // Son satır incomplete olabilir
+          buffer = lines.pop() || '';
           
           let isTokenEvent = false;
           
@@ -151,11 +141,9 @@ export const streamingChat = async (
       }
     };
 
-    // Stream okumaya başla
     await readStream();
 
   } catch (err) {
-    // Cancel kontrolü
     if (cancelTokenSource.token.reason) {
       console.log('Request cancelled');
       return;

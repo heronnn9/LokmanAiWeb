@@ -3,10 +3,8 @@ import { Message } from '@/store/slices/chatSlice'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
-// import 'highlight.js/styles/github.css' // Syntax highlighting için CSS
 
 const Messages = ({ message }: { message: Message }) => {
-    // Eğer mesaj boşsa ve streaming değilse, hiçbir şey render etme
     if (!message.content && !message.isStreaming) {
         return null;
     }
@@ -34,6 +32,7 @@ const Messages = ({ message }: { message: Message }) => {
                                         {children}
                                     </pre>
                                 ),
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 code: ({ inline, children, ...props }: any) => (
                                     inline ? (
                                         <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">
