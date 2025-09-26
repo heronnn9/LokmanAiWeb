@@ -1,7 +1,7 @@
 'use client';
 
 import { SelectProps } from '@/@interfaces/input';
-import { BORDER_RADIUS_SM } from '@/constants/theme.constant';
+import { BORDER_RADIUS_SM } from '@/constants/theme.constants';
 import classNames from 'classnames';
 import React, {
     useEffect,
@@ -62,7 +62,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
         const displayName =
             value != null && value !== ''
                 ? options.find((opt) => String(opt.value) === String(value))
-                      ?.name || placeholder
+                    ?.name || placeholder
                 : placeholder;
 
         const [truncatedDisplayName, setTruncatedDisplayName] =
@@ -250,7 +250,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
                             },
 
                             props.disabled &&
-                                `cursor-not-allowed ${isLight ? 'bg-neutral-0' : 'bg-primary-50'} opacity-50`,
+                            `cursor-not-allowed ${isLight ? 'bg-neutral-0' : 'bg-primary-50'} opacity-50`,
                             { 'bg-danger-50': isError },
                             { 'bg-neutral-0': isLight },
 
@@ -286,8 +286,8 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
                             { 'pr-20': onIconClick },
                             // Focus state
                             !isError &&
-                                !props.disabled &&
-                                'focus:bg-neutral-0 focus:text-primary-500 focus:ring-[1px] focus:ring-neutral-500',
+                            !props.disabled &&
+                            'focus:bg-neutral-0 focus:text-primary-500 focus:ring-[1px] focus:ring-neutral-500',
                             {
                                 'focus:ring-danger-500 focus:ring-[1px]':
                                     isError,
@@ -328,7 +328,7 @@ const Select = forwardRef<HTMLInputElement, SelectProps>(
                                             value != null &&
                                             value !== '' &&
                                             String(value) ===
-                                                String(option.value)
+                                            String(option.value)
                                         }
                                         updateValue={handleSelectOption}
                                         id={option.id}
