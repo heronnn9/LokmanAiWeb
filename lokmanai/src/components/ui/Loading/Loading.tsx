@@ -1,8 +1,8 @@
 'use client';
 import classNames from 'classnames';
-import type { CommonProps } from '@/@types/common';
 import type { ElementType, ReactNode } from 'react';
 import Spinner from './Spinner/Spinner';
+import { CommonProps } from '@/@types/common';
 
 interface BaseLoadingProps extends CommonProps {
     asElement?: ElementType;
